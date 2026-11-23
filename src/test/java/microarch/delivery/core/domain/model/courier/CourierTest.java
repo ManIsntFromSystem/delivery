@@ -57,6 +57,21 @@ class CourierTest {
     }
 
     @ParameterizedTest
+    @CsvSource({ "20, true", "21, false" })
+    void canTakeOrderWhenCourierHasNoAssignmentsOnlyIfOrderFitsMax(int orderVolume, boolean expected) {
+        // Arrange
+        var location = Location.create(5, 5).getValue();
+        var courier = Courier.create("Маша", location).getValue();
+        var order = Order.create(UUID.randomUUID(), location, Volume.create(orderVolume).getValue()).getValue();
+
+        // Act
+        var result = courier.canTakeOrder(order);
+
+        // Assert
+        assertThat(result.getValue()).isEqualTo(expected);
+    }
+
+    @ParameterizedTest
     @CsvSource({ "15, 5, true", "15, 6, false", "10, 10, true", "19, 2, false" })
     void canTakeOrderOnlyWhenTotalVolumeDoesNotExceedMax(int occupiedVolume, int orderVolume, boolean expected) {
         // Arrange

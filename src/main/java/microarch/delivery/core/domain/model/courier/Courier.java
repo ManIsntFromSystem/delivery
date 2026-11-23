@@ -55,8 +55,8 @@ public final class Courier extends Aggregate<UUID> {
         if (order == null)
             return Result.failure(GeneralErrors.valueIsRequired("order"));
 
-        var freeVolume = maxVolume.getValue() - calculateOccupiedVolume();
-        return Result.success(order.getVolume().getValue() <= freeVolume);
+        var totalVolume = calculateTotalVolumeWith(order.getVolume());
+        return Result.success(totalVolume.isLessOrEqual(maxVolume));
     }
 
     public UnitResult<Error> takeOrder(Order order) {
@@ -100,15 +100,10 @@ public final class Courier extends Aggregate<UUID> {
         return assignments.stream().filter(a -> a.getOrderId().equals(orderId)).findFirst().orElse(null);
     }
 
-    private int calculateOccupiedVolume() {
+    private Volume calculateTotalVolumeWith(Volume newOrderVolume) {
         // Завершённые назначения уже доставлены и не занимают объём курьера
-        var occupied = 0;
-        for (Assignment a : assignments) {
-            if (a.getStatus() == AssignmentStatus.ASSIGNED) {
-                occupied += a.getVolume().getValue();
-            }
-        }
-        return occupied;
+        return assignments.stream().filter(a -> a.getStatus() == AssignmentStatus.ASSIGNED).map(Assignment::getVolume)
+                .reduce(newOrderVolume, Volume::add);
     }
 
     public static class Errors {
