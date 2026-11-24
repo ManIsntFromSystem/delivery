@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Embeddable
 @Getter
@@ -37,6 +38,12 @@ public final class Location extends ValueObject<Location> {
         }
 
         return Result.success(new Location(x, y));
+    }
+
+    public static Location createRandom() {
+        var random = ThreadLocalRandom.current();
+        return create(random.nextInt(MIN_COORDINATE, MAX_COORDINATE + 1),
+                random.nextInt(MIN_COORDINATE, MAX_COORDINATE + 1)).getValueOrThrow();
     }
 
     /**
