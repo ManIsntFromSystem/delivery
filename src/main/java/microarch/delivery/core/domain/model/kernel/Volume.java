@@ -12,14 +12,15 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Volume extends ValueObject<Volume> {
+public final class Volume extends ValueObject<Volume> {
 
     private static final int MIN_EXCLUSIVE_VALUE = 0;
 
-    private int value;
+    private final int value;
 
     private Volume() {
         // для JPA
+        this.value = 0;
     }
 
     public static Result<Volume, Error> create(int value) {
@@ -28,6 +29,14 @@ public class Volume extends ValueObject<Volume> {
         }
 
         return Result.success(new Volume(value));
+    }
+
+    public Volume add(Volume other) {
+        return new Volume(Math.addExact(this.value, other.value));
+    }
+
+    public boolean isLessOrEqual(Volume other) {
+        return this.value <= other.value;
     }
 
     @Override

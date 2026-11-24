@@ -58,4 +58,33 @@ class VolumeTest {
         // Assert
         assertThat(isEqual).isFalse();
     }
+
+    @Test
+    void shouldAddVolumes() {
+        // Arrange
+        var first = Volume.create(7).getValue();
+        var second = Volume.create(8).getValue();
+
+        // Act
+        var result = first.add(second);
+
+        // Assert
+        assertThat(result).isEqualTo(Volume.create(15).getValue());
+        assertThat(first).isEqualTo(Volume.create(7).getValue());
+        assertThat(second).isEqualTo(Volume.create(8).getValue());
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "7, 8, true", "8, 8, true", "9, 8, false" })
+    void shouldCompareVolumes(int first, int second, boolean expected) {
+        // Arrange
+        var firstVolume = Volume.create(first).getValue();
+        var secondVolume = Volume.create(second).getValue();
+
+        // Act
+        var result = firstVolume.isLessOrEqual(secondVolume);
+
+        // Assert
+        assertThat(result).isEqualTo(expected);
+    }
 }
