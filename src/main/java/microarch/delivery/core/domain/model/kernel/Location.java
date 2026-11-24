@@ -13,16 +13,18 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class Location extends ValueObject<Location> {
+public final class Location extends ValueObject<Location> {
 
     public static final int MIN_COORDINATE = 1;
     public static final int MAX_COORDINATE = 10;
 
-    private int x;
-    private int y;
+    private final int x;
+    private final int y;
 
     private Location() {
         // для JPA
+        this.x = 0;
+        this.y = 0;
     }
 
     public static Result<Location, Error> create(int x, int y) {
