@@ -1,4 +1,4 @@
-package microarch.delivery.core.application.assignorders;
+package microarch.delivery.core.application.commands;
 
 import libs.errs.Error;
 import libs.errs.UnitResult;
@@ -23,7 +23,7 @@ public class AssignOrdersCommandHandlerImpl implements AssignOrdersCommandHandle
 
     @Override
     @Transactional
-    public UnitResult<Error> handle() {
+    public UnitResult<Error> handle(AssignOrdersCommand command) {
         // Нет нераспределённых заказов — назначать нечего
         var orderOpt = orderRepository.findAnyCreated();
         if (orderOpt.isEmpty())

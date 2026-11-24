@@ -125,4 +125,14 @@ class LocationTest {
         assertThat(result.isFailure()).isTrue();
         assertThat(result.getError()).isEqualTo(GeneralErrors.valueIsRequired("target"));
     }
+
+    @Test
+    void shouldCreateRandomLocationOnBoard() {
+        // Act
+        var location = Location.createRandom();
+
+        // Assert
+        assertThat(location.getX()).isBetween(Location.MIN_COORDINATE, Location.MAX_COORDINATE);
+        assertThat(location.getY()).isBetween(Location.MIN_COORDINATE, Location.MAX_COORDINATE);
+    }
 }
