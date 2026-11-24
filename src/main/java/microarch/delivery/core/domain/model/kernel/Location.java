@@ -1,5 +1,7 @@
 package microarch.delivery.core.domain.model.kernel;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import libs.ddd.ValueObject;
 import libs.errs.Error;
 import libs.errs.GeneralErrors;
@@ -8,24 +10,24 @@ import libs.errs.Result;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+@Embeddable
 @Getter
+@NoArgsConstructor(force = true, access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Location extends ValueObject<Location> {
 
     public static final int MIN_COORDINATE = 1;
     public static final int MAX_COORDINATE = 10;
 
+    @Column(name = "location_x")
     private final int x;
-    private final int y;
 
-    private Location() {
-        // для JPA
-        this.x = 0;
-        this.y = 0;
-    }
+    @Column(name = "location_y")
+    private final int y;
 
     public static Result<Location, Error> create(int x, int y) {
         Error error = Guard.combine(Guard.againstOutOfRange(x, MIN_COORDINATE, MAX_COORDINATE, "x"),

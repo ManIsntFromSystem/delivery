@@ -86,15 +86,15 @@ class LocationTest {
         // Act
         var hasNonPrivateOrNonFinalFields = fields.stream()
                 .anyMatch(f -> !Modifier.isPrivate(f.getModifiers()) || !Modifier.isFinal(f.getModifiers()));
-        var hasNonPrivateConstructors = Arrays.stream(Location.class.getDeclaredConstructors())
-                .anyMatch(c -> !Modifier.isPrivate(c.getModifiers()));
+        var hasPublicConstructors = Arrays.stream(Location.class.getDeclaredConstructors())
+                .anyMatch(c -> Modifier.isPublic(c.getModifiers()));
         var hasSetters = Arrays.stream(Location.class.getDeclaredMethods())
                 .anyMatch(m -> m.getName().startsWith("set"));
 
         // Assert
         assertThat(fields).isNotEmpty();
         assertThat(hasNonPrivateOrNonFinalFields).isFalse();
-        assertThat(hasNonPrivateConstructors).isFalse();
+        assertThat(hasPublicConstructors).isFalse();
         assertThat(hasSetters).isFalse();
     }
 
