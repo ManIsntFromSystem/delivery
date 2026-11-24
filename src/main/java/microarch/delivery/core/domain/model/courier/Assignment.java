@@ -1,30 +1,45 @@
 package microarch.delivery.core.domain.model.courier;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import libs.ddd.BaseEntity;
 import libs.errs.Error;
 import libs.errs.GeneralErrors;
 import libs.errs.Guard;
 import libs.errs.Result;
 import libs.errs.UnitResult;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import microarch.delivery.core.domain.model.kernel.Location;
 import microarch.delivery.core.domain.model.kernel.Volume;
 
 import java.util.UUID;
 
+@Entity
+@Table(name = "assignments")
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Assignment extends BaseEntity<UUID> {
 
     private static final int MAX_COMPLETION_DISTANCE = 1;
 
+    @Column(name = "order_id")
     private UUID orderId;
-    private Volume volume;
-    private Location location;
-    private AssignmentStatus status;
 
-    private Assignment() {
-        // для JPA
-    }
+    @Embedded
+    private Volume volume;
+
+    @Embedded
+    private Location location;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private AssignmentStatus status;
 
     private Assignment(UUID orderId, Volume volume, Location location) {
         super(UUID.randomUUID());
